@@ -17,7 +17,7 @@ func init() {
 	if debug {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
-	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}
+	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339Nano}
 	consoleWriter = output
 	log.Logger = log.Output(output)
 	log.Logger = log.With().Caller().Logger()

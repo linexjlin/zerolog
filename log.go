@@ -8,15 +8,16 @@ import (
 	"time"
 )
 
-var debug = true
 var consoleWriter io.Writer
 var fileWriter io.Writer
 
 func init() {
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	if debug {
+	if os.Getenv("debug")+os.Getenv("DEBUG")+os.Getenv("Debug") != "" {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	} else {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	}
+
 	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339Nano}
 	consoleWriter = output
 	log.Logger = log.Output(output)
@@ -31,13 +32,5 @@ func LogToFile(path string) {
 		multi := zerolog.MultiLevelWriter(consoleWriter, fileWriter)
 		log.Logger = log.Output(multi)
 		log.Logger = log.With().Caller().Logger()
-	}
-}
-
-func DebugEnable(enable bool) {
-	debug = enable
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	if debug {
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 }
